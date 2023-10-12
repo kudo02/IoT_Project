@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Filter</title>
+</head>
+<body>
+
+<h2>Data Filter</h2>
+
+<label for="startDate">Start Date:</label>
+<input type="input" id="startDate" name="startDate"><br><br>
+
+<label for="endDate">End Date:</label>
+<input type="input" id="endDate" name="endDate"><br><br>
+
+<button onclick="getDataByTimeStampRange()">Filter Data</button>
+
+<div id="filteredData"></div>
+
+<script>
+    function getDataByTimeStampRange() {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+
+        // Gửi yêu cầu GET đến API
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/data/filter?startDate=" + startDate + "&endDate=" + endDate, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var responseData = JSON.parse(xhr.responseText);
+                displayData(responseData);
+            }
+        };
+        xhr.send();
+    }
+
+    function displayData(data) {
+        var output = "<h3>Filtered Data:</h3>";
+        for (var i = 0; i < data.length; i++) {
+            output += "Temperature: " + data[i].temperature + "<br>";
+            output += "Humidity: " + data[i].humidity + "<br>";
+            output += "Light: " + data[i].light + "<br>";
+            output += "Bui: " + data[i].bui + "<br>";
+            output += "Timestamp: " + data[i].timestamp + "<br><br>";
+        }
+        document.getElementById("filteredData").innerHTML = output;
+    }
+</script>
+
+</body>
+</html>
